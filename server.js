@@ -18,6 +18,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ Root route for testing
+app.get("/", (req, res) => {
+  res.send("ParkMate Backend is Live 🚗");
+});
+
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
