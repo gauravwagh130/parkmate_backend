@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Registration route
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, mobile } = req.body; // ← include mobile
 
   try {
     let user = await User.findOne({ email });
@@ -18,17 +18,18 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = new User({ name, email, password: hashedPassword });
+    user = new User({ name, email, password: hashedPassword, mobile }); // ← include mobile
     await user.save();
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(201).json({ token, user: { _id: user._id, name, email } });
+    res.status(201).json({ token, user: { _id: user._id, name, email, mobile } });
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
   }
 });
+
 
 // Login route
 router.post('/login', async (req, res) => {
