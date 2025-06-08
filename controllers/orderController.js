@@ -9,7 +9,7 @@ export const saveBooking = async (req, res) => {
     // Validate required fields
     if (!userId || !location || !parkingArea || !vehicleType || !vehicleNumber || !date || !time || !cost) {
       console.error("❌ Missing Required Fields:", req.body);
-      return res.status(400).jason({ success: false, message: "All fields are required" });
+      return res.status(400).json({ success: false, message: "All fields are required" }); // <-- Fixed typo here
     }
 
     // Validate slot (optional, but you can add this check if needed)
@@ -31,8 +31,8 @@ export const saveBooking = async (req, res) => {
       paymentStatus: "Completed" 
     });
 
-    console.log("✅ Booking Saved Successfully:", newOrder);
     await newOrder.save();
+    console.log("✅ Booking Saved Successfully:", newOrder);
 
     res.status(201).json({ success: true, message: "Booking saved successfully", order: newOrder });
 
