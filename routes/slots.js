@@ -1,6 +1,6 @@
 import express from 'express';
 import Booking from '../models/Booking.js';
-import Order from '../models/order.js';
+import Order from '../models/Order.js';
 
 const router = express.Router();
 
