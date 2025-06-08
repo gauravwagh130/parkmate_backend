@@ -1,4 +1,4 @@
-import Order from "../models/Order.js";  // ✅ Use consistent casing for import
+import Order from "../models/order.js";  // ✅ Use consistent casing for import
 
 export const saveBooking = async (req, res) => {
   try {
