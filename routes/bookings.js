@@ -1,5 +1,6 @@
 import express from 'express';
-import Order from '../models/Order.js';
+import Booking from '../models/Booking.js';
+import Order from '../models/order.js';
 
 const router = express.Router();
 
@@ -8,15 +9,15 @@ async function getNextAvailableSlot(location, parkingArea) {
     const latestBooking = await Order.find({ location, parkingArea }).sort({ createdAt: -1 }).limit(1);
 
     if (!latestBooking || latestBooking.length === 0) {
-        return 'slot1';
+        return 'slot1'; // If no bookings yet, assign the first slot
     }
 
-    const lastSlot = latestBooking[0].selectedSlot;
+    const lastSlot = latestBooking[0].selectedSlot; // Example: 'slot3'
     const slotNumber = parseInt(lastSlot.replace('slot', ''));
     return `slot${slotNumber + 1}`;
 }
 
-// ✅ Create a new booking
+// ✅ Create a new booking (with automatic slot assignment)
 router.post('/book', async (req, res) => {
     const { userId, location, parkingArea, vehicleType, date, time, cost } = req.body;
 
@@ -46,7 +47,7 @@ router.post('/book', async (req, res) => {
     }
 });
 
-// ✅ Get the latest booking
+// ✅ Get the latest booking for a user
 router.get('/latest/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
@@ -57,16 +58,18 @@ router.get('/latest/:userId', async (req, res) => {
         }
 
         res.status(200).json(latestBooking);
+        console.log('Latest booking:', latestBooking);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
 });
 
-// ✅ Get order history
+// ✅ Get order history for a user
 router.get('/history/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
+        console.log('Received userId:', userId);
         const bookings = await Order.find({ userId }).sort({ createdAt: -1 });
 
         res.status(200).json(bookings);
